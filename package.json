@@ -1,0 +1,24 @@
+{
+  "name": "@naugtur/i-can-bench",
+  "version": "0.0.1",
+  "description": "A tiny set of utils to benchmark your JS that also cares about memory.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo soon && exit 1"
+  },
+  "keywords": [
+    "bench",
+    "benchmark",
+    "memory",
+    "performance"
+  ],
+  "author": "naugtur",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naugtur/i-can-bench.git"
+  },
+  "files": [
+    "index.js"
+  ]
+}
