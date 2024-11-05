@@ -4,7 +4,7 @@
   "description": "A tiny set of utils to benchmark your JS that also cares about memory.",
   "main": "index.js",
   "scripts": {
-    "test": "echo soon && exit 1"
+    "test": "node --expose-gc ./test.js"
   },
   "keywords": [
     "bench",
