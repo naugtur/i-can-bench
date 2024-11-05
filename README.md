@@ -8,6 +8,7 @@ A tiny set of utils to benchmark your JS that also cares about memory.
 ## Features
 - Runs your function many times and calculates average time it took
 - Collects memory information while running, so you get the idea if you're trading performance for memory consumption
+- Produces a log file (easy to gitignore) where it stores the latest result for each git commit you test
 
 
 Each bench function has the same signature, differs only in sync/async behavior
@@ -22,13 +23,14 @@ Each bench function has the same signature, differs only in sync/async behavior
 Memory spike info will only include the memory spaces that changed during the benchmark run.
 
 ```
-MEMORY_SPIKE: {
-    code_space: '+0.2349 MB',
-    new_space: '+8.8414 MB',
-    old_space: '+5.8182 MB',
-},
-name: 58.0426365,
-
+current: {
+  MEMORY_SPIKE: {
+      code_space: '+0.2349 MB',
+      new_space: '+8.8414 MB',
+      old_space: '+5.8182 MB',
+  },
+  name: 58.0426365,
+}
 ```
 
 |                 |                                                                                                              |
@@ -46,13 +48,13 @@ const syncResult = bench(() => {
   // Your synchronous code here
 }, 'SyncTest', 1000);
 
-console.log(syncResult);
+console.table(syncResult);
 
 const asyncResult = await benchAsync(async () => {
   // Your asynchronous code here
 }, 'AsyncTest', 1000);
 
-console.log(asyncResult);
+console.table(asyncResult);
 ```
 
 ### `recordMemorySpike(frequency = 10)`

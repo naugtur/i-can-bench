@@ -45,6 +45,32 @@ const recordMemorySpike = (frequency = 10) => {
   }
 }
 
+exports.config = {
+  history: true,
+}
+
+
+const history = (name, value) => {
+  if(!exports.config.history) return value;
+  const fs = require('node:fs')
+  const { execSync } = require('child_process')
+  const filePath = `bench-${name}.log`// the intention is for the file to be gitignored and only referred locally
+  let log = {}
+  if (fs.existsSync(filePath)) {
+    log = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+  }
+  const summary = {
+    current: value,
+    ...log,
+  }
+  const commit =
+    'git:' + execSync('git rev-parse --short HEAD').toString().trim()
+  log[commit] = value
+  fs.writeFileSync(filePath, JSON.stringify(log, null, 2))
+
+  return summary
+}
+
 /**
  * Benchmarks a synchronous function.
  *
@@ -61,7 +87,7 @@ exports.bench = (fn, name, iterations = 1000) => {
     s.collect()
   }
   const t1 = performance.now()
-  return { [name]: (t1 - t0) / iterations, MEMORY_SPIKE: s.getResult() }
+  return history(name, { [name]: (t1 - t0) / iterations, MEMORY_SPIKE: s.getResult() })
 }
 
 /**
@@ -80,7 +106,7 @@ exports.benchAsync = async (fn, name, iterations = 1000) => {
     s.collect()
   }
   const t1 = performance.now()
-  return { [name]: (t1 - t0) / iterations, MEMORY_SPIKE: s.getResult() }
+  return history(name, { [name]: (t1 - t0) / iterations, MEMORY_SPIKE: s.getResult() })
 }
 /**
  * Benchmarks multiple asynchronous function calls using Promise.all.
@@ -97,7 +123,7 @@ exports.benchAsyncAll = async (fn, name, iterations = 1000) => {
   const t0 = performance.now()
   await Promise.all(calls.map(() => fn()))
   const t1 = performance.now()
-  return { [name]: (t1 - t0) / iterations, MEMORY_SPIKE: s.getResult() }
+  return history(name, { [name]: (t1 - t0) / iterations, MEMORY_SPIKE: s.getResult() })
 }
 
 exports.recordMemorySpike = recordMemorySpike
