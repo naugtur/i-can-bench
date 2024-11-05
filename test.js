@@ -12,17 +12,17 @@ const { benchAsync } = require("./index.js");
     async () => {
 
       // Implementation 1
-      for (const file of files) {
-        await readFile(`${__dirname}/${file}`, "utf-8");
-      }
+      // for (const file of files) {
+      //   await readFile(`${__dirname}/${file}`, "utf-8");
+      // }
 
       // Implementation 2
 
-      // await Promise.all(
-      //   files.map(async (file) => {
-      //     await readFile(`${__dirname}/${file}`, "utf-8");
-      //   })
-      // );
+      await Promise.all(
+        files.map(async (file) => {
+          await readFile(`${__dirname}/${file}`, "utf-8");
+        })
+      );
     },
     "AsyncTest1",
     10000
